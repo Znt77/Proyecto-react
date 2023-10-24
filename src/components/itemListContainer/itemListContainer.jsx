@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const ejerciciot = ({props}) => {
+const ItemListContainer = ({props}) => {
     const promesa = new Promise ((res, rej)=>{
         setTimeout(() => {
             const productos = [
@@ -21,6 +21,7 @@ const ejerciciot = ({props}) => {
         .then(res=> console.log(res))
         .catch(error=> console.error(error.message))
     })
+    return(productos)
 }
 
-export default ejerciciot
+            export default ItemListContainer
