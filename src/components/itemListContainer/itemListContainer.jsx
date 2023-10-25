@@ -1,27 +1,68 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Card, Select } from "antd";
 
-const ItemListContainer = ({props}) => {
-    const promesa = new Promise ((res, rej)=>{
-        setTimeout(() => {
-            const productos = [
-                {name: "producto1" , precio:2000 , id: 1},
-                {name: "producto2" , precio:2000 , id: 2},
-                {name: "producto3" , precio:2000 , id: 3},
-                {name: "producto4" , precio:2000 , id: 4},
-                {name: "producto5" , precio:2000 , id: 5},
-                {name: "producto6" , precio:2000 , id: 6},
-                {name: "producto7" , precio:2000 , id: 7},
+const { Option } = Select;
 
-                productos.lenght > 0 ? res(productos) : rej({data: [], message: `No hay productos`})
-            ]
-        }, 2000);
-    })
+function ItemListContainer() {
+    const [products, setProducts] = useState([]);
+    const [FiltroProductos, setFiltroProductos] = useState([]);
+    const [seleccionarCategoria, setSeleccionarCategoria] = useState("all");
+
     useEffect(() => {
-        Promise
-        .then(res=> console.log(res))
-        .catch(error=> console.error(error.message))
-    })
-    return(productos)
+        fetch("https://fakestoreapi.com/products")
+            .then((response) => {
+                if (!response.ok) {
+                    return new Error("Network error");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setProducts(data);
+                setFiltroProductos(data);
+            })
+            .catch((error) => {
+                console.error("Error in fetching", error);
+            });
+    }, []);
+
+    const cambioDeCategoria = (value) => {
+        setSeleccionarCategoria(value);
+        if (value === "all") {
+            setFiltroProductos(products);
+        } else {
+            const filtrado = products.filter((product) => product.category === value);
+            setFiltroProductos(filtrado);
+        }
+    };
+
+    return (
+        <div>
+            <h1>Catalog</h1>
+            <Select
+                defaultValue="all"
+                style={{ width: 150, marginBottom: 16 }}
+                onChange={cambioDeCategoria}
+            >
+                <Option value="all">All</Option>
+                <Option value="electronics">Electronics</Option>
+                <Option value="jewelery">Jewelery</Option>
+                <Option value="men's clothing">Men's clothing</Option>
+                <Option value="women's clothing">Women's clothing</Option>
+            </Select>
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+                {FiltroProductos.map((product) => (
+                    <Card
+                        key={product.id}
+                        title={product.title}
+                        style={{ width: 300, margin: 16 }}
+                    >
+                        <p>{product.price}</p>
+                        <a href={`/product/${product.id}`}>View Details</a>
+                    </Card>
+                ))}
+            </div>
+        </div>
+    );
 }
 
-            export default ItemListContainer
+export default ItemListContainer;

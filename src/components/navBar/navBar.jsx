@@ -1,6 +1,7 @@
 import React from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
+import { Link } from 'react-router-dom';
 
 const items = [
     {
@@ -9,11 +10,11 @@ const items = [
         children: [
             {
                 key: '1-1',
-                label: 'Grind for hour',
+                label: <Link to="/grind-hour">Grind for hour</Link>,
             },
             {
                 key: '1-2',
-                label: 'Grind for billion',
+                label: <Link to="/grind-billion">Grind for billion</Link>,
             },
         ],
     },
@@ -23,11 +24,11 @@ const items = [
         children: [
             {
                 key: '2-1',
-                label: 'Buy',
+                label: <Link to="/">Buy</Link>,
             },
             {
                 key: '2-2',
-                label: 'Sell',
+                label: <Link to="/sell">Sell</Link>,
             },
         ],
     }

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Input, Button, Select, Form, List, Card } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { Input, Button, Select, Form, List, Card } from 'antd'
 
 const { Option } = Select;
 
@@ -9,37 +9,38 @@ const clasesBDO = {
     Class3: 'Dark Knight',
     Class4: 'Archer',
     Class5: 'Warrior',
-};
+}
 
 const layout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 20 },
-};
+}
 
 const tailLayout = {
     wrapperCol: { offset: 4, span: 20 },
-};
+}
+
 
 function AddAccount() {
-    const productosIniciales = JSON.parse(localStorage.getItem('products')) || [];
-    const [productList, setProductList] = useState(productosIniciales);
-    const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, class: 'Class1' });
-    const [filtroClase, setFiltroClase] = useState('All');
+    const productosIniciales = JSON.parse(localStorage.getItem('products')) || []
+    const [productList, setProductList] = useState(productosIniciales)
+    const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, class: 'Class1' })
+    const [filtroClase, setFiltroClase] = useState('All')
 
     const registrarNuevoProducto = () => {
         if (newProduct.name) {
-            setProductList([...productList, newProduct]);
-            setNewProduct({ name: '', description: '', price: 0, class: 'Class1' });
+            setProductList([...productList, newProduct])
+            setNewProduct({ name: '', description: '', price: 0, class: 'Class1' })
         }
-    };
+    }
     const filtroProductos = filtroClase === 'All' ? productList : productList.filter(product => product.class === filtroClase);
 
     useEffect(() => {
         localStorage.setItem('products', JSON.stringify(productList));
-    }, [productList]);
+    }, [productList])
 
     return (
-        <div className="App">
+        <div>
             <h1>My accounts panel</h1>
             <Form {...layout}>
                 <Form.Item label="Gear score">
@@ -55,7 +56,7 @@ function AddAccount() {
                         onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                     />
                 </Form.Item>
-                <Form.Item label="Price">
+                <Form.Item label="Price (USD)">
                     <Input
                         type="number"
                         value={newProduct.price}
@@ -103,21 +104,20 @@ function AddAccount() {
                     renderItem={(product, index) => (
                         <List.Item>
                             <Card
-                                title={`${product.name}GS`}
+                                title={`${clasesBDO[product.class]} ${product.name}GS`}
                             >
                                 <p>{product.description}</p>
                                 <p>${product.price} USD</p>
-                                <p>{clasesBDO[product.class]}</p>
                             </Card>
                         </List.Item>
                     )}
                 />
             </div>
         </div>
-    );
+    )
 }
 
-export default AddAccount;
+export default AddAccount
 
 
 
