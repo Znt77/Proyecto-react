@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Input, Button, Select, Form, List, Card } from 'antd'
+// import { db } from '../../firebase/client.js'
 
 const { Option } = Select;
 
@@ -118,9 +119,3 @@ function AddAccount() {
 }
 
 export default AddAccount
-
-
-
-
-
-
