@@ -81,12 +81,14 @@ function AddAccount() {
                         type="number"
                         value={newProduct.name}
                         onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                        placeholder='Gear Score (numbers) Example: 738'
                     />
                 </Form.Item>
                 <Form.Item label="Description">
                     <Input
                         value={newProduct.description}
                         onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                        placeholder='Fairy with all skills, 250fs, etc.'
                     />
                 </Form.Item>
                 <Form.Item label="Price (USD)">
@@ -94,6 +96,7 @@ function AddAccount() {
                         type="number"
                         value={newProduct.price}
                         onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                        placeholder='Price (Number in USD)'
                     />
                 </Form.Item>
                 <Form.Item label="Class">
