@@ -44,7 +44,7 @@ function AddAccount() {
             setProductList([...productList, newProduct])
             setNewProduct({ name: '', description: '', price: 0, class: 'Class1' })
             const productData = {
-                name: newProduct.name,
+                gear: newProduct.name,
                 description: newProduct.description,
                 price: newProduct.price,
                 class: newProduct.class
