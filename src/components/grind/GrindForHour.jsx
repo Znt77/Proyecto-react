@@ -28,8 +28,7 @@ const GrindForHour = ({ hourlyRate }) => {
                 step={1}
                 marks={{ 1: '1', 50: '50' }}
                 onChange={handleSliderChange}
-                value={selectedHours}
-            />
+                value={selectedHours}/>
             <Paragraph>We will grind on your account {selectedHours} hours</Paragraph>
             <Paragraph>Total price: ${calculateTotalCost()}</Paragraph>
             <Button type="primary" onClick={handleContractClick}>

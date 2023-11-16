@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Input, Button, Select, Form, List, Card } from 'antd'
-// import { db } from '../../firebase/client.js'
-
+import { collection, addDoc, getFirestore } from "firebase/firestore"
+import { db } from '../../firebase/client'
+import Swal from 'sweetalert2'
 const { Option } = Select;
 
 const clasesBDO = {
@@ -20,21 +21,38 @@ const layout = {
 const tailLayout = {
     wrapperCol: { offset: 4, span: 20 },
 }
-
-
 function AddAccount() {
-    const productosIniciales = JSON.parse(localStorage.getItem('products')) || []
-    const [productList, setProductList] = useState(productosIniciales)
-    const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, class: 'Class1' })
-    const [filtroClase, setFiltroClase] = useState('All')
+    const productosIniciales = JSON.parse(localStorage.getItem('products')) || [];
+    const [productList, setProductList] = useState(productosIniciales);
+    const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, class: 'Class1' });
+    const [filtroClase, setFiltroClase] = useState('All');
 
     const registrarNuevoProducto = () => {
         if (newProduct.name) {
-            setProductList([...productList, newProduct])
-            setNewProduct({ name: '', description: '', price: 0, class: 'Class1' })
+            const productData = {
+                name: newProduct.name,
+                description: newProduct.description,
+                price: newProduct.price,
+                class: newProduct.class
+            };
+            const db = getFirestore()
+            const accountCollection = collection (db, "cuentas")
+            addDoc(accountCollection, productData)
+            .then (
+                ({id}) => Swal.fire({
+                title: 'Success!',
+                text: `Your account has been registered with the id: ${id}`,
+                icon: 'success',
+                confirmButtonText: 'Cool'}))
+            .catch(Swal.fire({
+                title: 'Error!',
+                text: `Your account could not been registered: ${error}`,
+                icon: 'error',
+                confirmButtonText: 'Ok'}))
         }
-    }
-    const filtroProductos = filtroClase === 'All' ? productList : productList.filter(product => product.class === filtroClase);
+    };
+
+    const filtroProductos = filtroClase === 'All' ? productList : productList.filter((product) => product.class === filtroClase)
 
     useEffect(() => {
         localStorage.setItem('products', JSON.stringify(productList));

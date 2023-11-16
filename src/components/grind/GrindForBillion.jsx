@@ -28,8 +28,7 @@ const GrindForBillion = ({ hourlyRate }) => {
                 step={1}
                 marks={{ 1: '1', 50: '200' }}
                 onChange={handleSliderChange}
-                value={selectedBillions}
-            />
+                value={selectedBillions}/>
             <Paragraph>We will grind on your account {selectedBillions} billions</Paragraph>
             <Paragraph>Total price: ${calculateTotalCost()}</Paragraph>
             <Button type="primary" onClick={handleContractClick}>
