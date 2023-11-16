@@ -11,6 +11,18 @@ const clasesBDO = {
     Class3: 'Dark Knight',
     Class4: 'Archer',
     Class5: 'Warrior',
+    Class6: 'Sorceress',
+    Class7: 'Valkyrie',
+    Class8: 'Musah',
+    Class9: 'Me-gu',
+    Class10: 'Wu-sah',
+    Class11: 'Ranger',
+    Class12: 'Ninja',
+    Class13: 'Kunoichi',
+    Class14: 'Nova',
+    Class15: 'Striker',
+    Class16: 'Mystic',
+    Class17: 'Maehwa',
 }
 
 const layout = {
@@ -29,12 +41,14 @@ function AddAccount() {
 
     const registrarNuevoProducto = () => {
         if (newProduct.name) {
+            setProductList([...productList, newProduct])
+            setNewProduct({ name: '', description: '', price: 0, class: 'Class1' })
             const productData = {
                 name: newProduct.name,
                 description: newProduct.description,
                 price: newProduct.price,
                 class: newProduct.class
-            };
+            }
             const db = getFirestore()
             const accountCollection = collection (db, "cuentas")
             addDoc(accountCollection, productData)
