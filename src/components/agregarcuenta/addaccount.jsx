@@ -58,7 +58,7 @@ function AddAccount() {
                 text: `Your account has been registered with the id: ${id}`,
                 icon: 'success',
                 confirmButtonText: 'Cool'}))
-            .catch(Swal.fire({
+            .catch((error) => Swal.fire({
                 title: 'Error!',
                 text: `Your account could not been registered: ${error}`,
                 icon: 'error',
@@ -102,8 +102,7 @@ function AddAccount() {
                 <Form.Item label="Class">
                     <Select
                         value={newProduct.class}
-                        onChange={(value) => setNewProduct({ ...newProduct, class: value })}
-                    >
+                        onChange={(value) => setNewProduct({ ...newProduct, class: value })}>
                         {Object.keys(clasesBDO).map((classKey) => (
                             <Option key={classKey} value={classKey}>
                                 {clasesBDO[classKey]}
