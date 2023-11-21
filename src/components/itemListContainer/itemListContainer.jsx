@@ -1,68 +1,51 @@
-import React, { useEffect, useState } from "react";
-import { Card, Select } from "antd";
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { Spinner } from "react-bootstrap"
+import ItemList from "./ItemList"
+import { db } from "../../firebase/client"
+import { collection, getDocs, getDoc, doc, query, where } from "firebase/firestore"
 
-const { Option } = Select;
-
-function ItemListContainer() {
-    const [products, setProducts] = useState([]);
-    const [FiltroProductos, setFiltroProductos] = useState([]);
-    const [seleccionarCategoria, setSeleccionarCategoria] = useState("all");
+const ItemListContainer = ({ greeting }) => {
+    const [products, setProducts] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const { categoryId } = useParams()
 
     useEffect(() => {
-        fetch("https://fakestoreapi.com/products")
-            .then((response) => {
-                if (!response.ok) {
-                    return new Error("Network error");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setProducts(data);
-                setFiltroProductos(data);
-            })
-            .catch((error) => {
-                console.error("Error in fetching", error);
-            });
-    }, []);
 
-    const cambioDeCategoria = (value) => {
-        setSeleccionarCategoria(value);
-        if (value === "all") {
-            setFiltroProductos(products);
-        } else {
-            const filtrado = products.filter((product) => product.category === value);
-            setFiltroProductos(filtrado);
+        const fetchProducts = async () => {
+            setIsLoading(true)
+            try {
+                const productRef = collection(db, "cuentas")
+                const snapshot = await getDocs(productRef)
+                const productsData = snapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }))
+                const filterAccounts = categoryId
+                    ? productsData.filter((product) => product.categoryId === categoryId)
+                    : productsData
+                setProducts(filterAccounts)
+            } catch (error) {
+                console.error("Error fetching products:", error)
+            } finally {
+                setIsLoading(false)
+            }
         }
-    };
+        fetchProducts()
+    }, [categoryId]) 
 
     return (
         <div>
-            <h1>Catalog</h1>
-            <Select
-                defaultValue="all"
-                style={{ width: 150, marginBottom: 16 }}
-                onChange={cambioDeCategoria}
-            >
-                <Option value="all">All</Option>
-                <Option value="electronics">Electronics</Option>
-                <Option value="jewelery">Jewelery</Option>
-                <Option value="men's clothing">Men's clothing</Option>
-                <Option value="women's clothing">Women's clothing</Option>
-            </Select>
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
-                {FiltroProductos.map((product) => (
-                    <Card
-                        key={product.id}
-                        title={product.title}
-                        style={{ width: 300, margin: 16 }}
-                    >
-                        <p>{product.price}</p>
-                        <a href={`/product/${product.id}`}>View Details</a>
-                    </Card>
-                ))}
-            </div>
+            <h1>{greeting}</h1>
+            {isLoading ? (
+                <div className="d-flex justify-content-center">
+                    <Spinner animation="border" className="m-5" />
+                </div>
+            ) : (
+                <ItemList products={products} />
+            )}
         </div>
-    );
+    )
 }
 
-export default ItemListContainer;
+export default ItemListContainer

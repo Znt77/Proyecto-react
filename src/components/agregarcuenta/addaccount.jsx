@@ -36,37 +36,39 @@ const tailLayout = {
 function AddAccount() {
     const productosIniciales = JSON.parse(localStorage.getItem('products')) || [];
     const [productList, setProductList] = useState(productosIniciales);
-    const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, class: 'Class1' });
+    const [newProduct, setNewProduct] = useState({ name: '', description: '', price: 0, clase: 'Wizard', Image: '' });
     const [filtroClase, setFiltroClase] = useState('All');
 
-    const registrarNuevoProducto = () => {
+    const registerNewProduct = () => {
         if (newProduct.name) {
             setProductList([...productList, newProduct])
-            setNewProduct({ name: '', description: '', price: 0, class: 'Class1' })
+            setNewProduct({ name: '', description: '', price: 0, clase: 'Wizard', Image: '' })
             const productData = {
                 gear: newProduct.name,
                 description: newProduct.description,
                 price: newProduct.price,
-                class: newProduct.class
+                clase: newProduct.clase,
+                image: newProduct.Image
             }
             const db = getFirestore()
-            const accountCollection = collection (db, "cuentas")
+            const accountCollection = collection(db, "cuentas")
             addDoc(accountCollection, productData)
-            .then (
-                ({id}) => Swal.fire({
-                title: 'Success!',
-                text: `Your account has been registered with the id: ${id}`,
-                icon: 'success',
-                confirmButtonText: 'Cool'}))
-            .catch((error) => Swal.fire({
-                title: 'Error!',
-                text: `Your account could not been registered: ${error}`,
-                icon: 'error',
-                confirmButtonText: 'Ok'}))
+                .then(
+                    ({ id }) => Swal.fire({
+                        title: 'Success!',
+                        text: `Your account has been registered with the id: ${id}`,
+                        icon: 'success',
+                        confirmButtonText: 'Cool'
+                    }))
+                .catch((error) => Swal.fire({
+                    title: 'Error!',
+                    text: `Your account could not been registered: ${error}`,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                }))
         }
     };
-
-    const filtroProductos = filtroClase === 'All' ? productList : productList.filter((product) => product.class === filtroClase)
+    const filtroProductos = filtroClase === 'All' ? productList : productList.filter((product) => product.clase === filtroClase)
 
     useEffect(() => {
         localStorage.setItem('products', JSON.stringify(productList));
@@ -101,17 +103,25 @@ function AddAccount() {
                 </Form.Item>
                 <Form.Item label="Class">
                     <Select
-                        value={newProduct.class}
-                        onChange={(value) => setNewProduct({ ...newProduct, class: value })}>
+                        value={newProduct.clase}
+                        onChange={(value) => setNewProduct({ ...newProduct, clase: value })}
+                    >
                         {Object.keys(clasesBDO).map((classKey) => (
-                            <Option key={classKey} value={classKey}>
+                            <Option key={classKey} value={clasesBDO[classKey]}>
                                 {clasesBDO[classKey]}
                             </Option>
                         ))}
                     </Select>
                 </Form.Item>
+                <Form.Item label="Image">
+                    <Input
+                        type="file"
+                        value={newProduct.Image}
+                        onChange={(e) => setNewProduct({ ...newProduct, Image: e.target.value })}
+                    />
+                </Form.Item>
                 <Form.Item {...tailLayout}>
-                    <Button type="primary" onClick={registrarNuevoProducto}>
+                    <Button type="primary" onClick={registerNewProduct}>
                         Add account
                     </Button>
                 </Form.Item>
